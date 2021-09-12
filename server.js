@@ -3,39 +3,38 @@ const app = express();
 const http = require('http');
 const expressServer = http.createServer(app);
 
+
+
+
 const { Server } = require('socket.io');
+
+
 const io = new Server(expressServer);
 
 
 io.on('connection', (socket) => {
-    console.log('New User Connection Established');
+    console.log('New User Connected');
 
-    io.on('disconnect', () => {
-        console.log('New User Connection Disconnected');
+    socket.on('disconnect', () => {
+        console.log('New User Disconnected');
     })
-    socket.send('I am From Your Server Side');
+
+    socket.send('Welcome I am From Server!');
 
     setTimeout(() => {
-        socket.send('I am From Your Server')
-    }, 1000);
+        socket.send('Hi, I am Your SetTimeOut')
+    }, 3000)
 
     setInterval(() => {
-        let date = new Date();
-        let time = date.getTime();
-        socket.send(time);
+        const date = new Date();
+        const time = date.getTime();
+        socket.emit('times', time);
     }, 10);
 
 
 
 
-
 })
-
-
-
-
-
-
 
 
 
@@ -44,7 +43,6 @@ app.get('/', (req, res) => {
 })
 
 
-
-expressServer.listen(4000, () => {
-    console.log('Your Server Is Running Now At 4000')
+expressServer.listen(8000, () => {
+    console.log('Your Server is Running Now @ 8000');
 })
